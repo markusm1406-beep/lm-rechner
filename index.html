@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lievito Madre Rechner</title>
+    
+    <!-- PWA Einstellungen -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d35400">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LM Rechner">
+
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; padding: 20px; color: #333; }
+        .card { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #d35400; margin-top: 0; }
+        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; background-color: #e67e22; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; margin-top: 20px; cursor: pointer; }
+        button:hover { background-color: #d35400; }
+        .result { margin-top: 20px; padding: 15px; background: #fff8f0; border-left: 5px solid #e67e22; border-radius: 4px; }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 8px; font-size: 15px; line-height: 1.4; }
+        .instructions { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0; }
+        .instructions h4 { margin-bottom: 8px; color: #d35400; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🌾 Lievito Madre Rechner</h2>
+    
+    <label for="lm">Verfügbare Lievito Madre (g):</label>
+    <input type="number" id="lm" value="130" min="10" placeholder="z. B. 130">
+
+    <label for="recipe">Was möchtest du backen?</label>
+    <select id="recipe">
+        <option value="pizza">Pizzateig (für Pizzaofen)</option>
+        <option value="brot">Rustikales Landbrot</option>
+        <option value="broetchen">Knusprige Brötchen</option>
+        <option value="hefezopf">Süßer Hefezopf / Brioche</option>
+    </select>
+
+    <button onclick="calculateRecipe()">Rezept & Anleitung berechnen</button>
+
+    <div class="result" id="output" style="display:none;">
+        <h3 id="resTitle" style="margin-top:0; color:#e67e22;"></h3>
+        <ul id="resList"></ul>
+        
+        <div class="instructions" id="instructions">
+            <h4>📋 Schritt-für-Schritt Anleitung:</h4>
+            <ol id="resSteps"></ol>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateRecipe() {
+    const lm = parseFloat(document.getElementById('lm').value);
+    const recipe = document.getElementById('recipe').value;
+    const output = document.getElementById('output');
+    const resTitle = document.getElementById('resTitle');
+    const resList = document.getElementById('resList');
+    const resSteps = document.getElementById('resSteps');
+
+    if (isNaN(lm) || lm <= 0) {
+        alert("Bitte gib eine gültige Grammzahl für die Lievito Madre ein!");
+        return;
+    }
+
+    let mehl = 0, wasser = 0, salz = 0, oel = 0, zucker = 0, butter = 0, eigelb = 0, milch = 0;
+    let yieldInfo = "";
+    let stepsHTML = "";
+
+    if (recipe === "pizza") {
+        mehl = Math.round(lm * 5.77);
+        wasser = Math.round(mehl * 0.55);
+        salz = Math.round(mehl * 0.027);
+        oel = Math.round(mehl * 0.02);
+        
+        const gesamtGewicht = mehl + wasser + lm + salz + oel;
+        const ballen = Math.round(gesamtGewicht / 250);
+        yieldInfo = `Ergibt ca. <b>${ballen} Pizzaballen</b> (à 250 g)`;
+
+        resTitle.innerText = "🍕 Pizzateig-Rezept";
+        resList.innerHTML = `
+            <li><b>Weizenmehl (Tipo 00/550):</b> ${mehl} g</li>
+            <li><b>Wasser (handwarm):</b> ${wasser} ml</li>
+            <li><b>Lievito Madre:</b> ${lm} g</li>
+            <li><b>Salz:</b> ${salz} g</li>
+            <li><b>Olivenöl:</b> ${oel} g</li>
+            <li><i>${yieldInfo}</i></li>
+        `;
+
+        stepsHTML = `
+            <li><b>Mischen:</b> Lievito Madre im handwarmen Wasser auflösen. Mehl dazugeben und ca. 4 Min. kneten.</li>
+            <li><b>Kneten:</b> Salz und Olivenöl hinzufügen. Für 10–12 Min. intensiv kneten, bis der Teig glatt ist.</li>
+            <li><b>Stockgare:</b> Abgedeckt 2–3 Stunden bei Raumtemperatur anspringen lassen.</li>
+            <li><b>Kalte Reife:</b> Für 12–24 Stunden in den Kühlschrank stellen.</li>
+            <li><b>Stückgare:</b> 4–5 Stunden vor dem Backen aus dem Kühlschrank holen, in ${ballen} Ballen teilen, straff schleifen und abgedeckt gehen lassen.</li>
+            <li><b>Backen:</b> Im Pizzaofen bei >400 °C für 60–90 Sekunden backen (Flamme beim Einschießen runterregeln).</li>
+        `;
+    } 
+    else if (recipe === "brot") {
+        mehl = Math.round(lm * 2.67);
+        wasser = Math.round(mehl * 0.60);
+        salz = Math.round(mehl * 0.026);
+        
+        resTitle.innerText = "🍞 Landbrot-Rezept";
+        resList.innerHTML = `
+            <li><b>Weizenmehl (Type 550):</b> ${mehl} g</li>
+            <li><b>Wasser (handwarm):</b> ${wasser} ml</li>
+            <li><b>Lievito Madre:</b> ${lm} g</li>
+            <li><b>Salz:</b> ${salz} g</li>
+            <li><b>Honig (optional):</b> 1 TL</li>
+        `;
+
+        stepsHTML = `
+            <li><b>Kneten:</b> Lievito Madre im Wasser lösen, Mehl dazu und 4 Min. kneten. Salz (+ Honig) zugeben und 10 Min. geschmeidig fertig kneten.</li>
+            <li><b>Stockgare:</b> 3 Stunden bei Zimmertemperatur reifen lassen. Nach Stunde 1 und 2 jeweils einmal dehnen und falten.</li>
+            <li><b>Formen:</b> Zu einem rundem oder länglichen Laib formen und in ein gut bemehltes Gärkörbchen legen.</li>
+            <li><b>Stückgare:</b> 2 Stunden bei Raumtemperatur gehen lassen (oder über Nacht im Kühlschrank).</li>
+            <li><b>Backen:</b> Bei 230 °C Ober-/Unterhitze mit Dampf für 15 Min. anbacken. Dampf ablassen, auf 200 °C reduzieren und 25–30 Min. fertig ausbacken.</li>
+        `;
+    }
+    else if (recipe === "broetchen") {
+        mehl = Math.round(lm * 2.67);
+        wasser = Math.round(mehl * 0.58);
+        salz = Math.round(mehl * 0.026);
+        oel = Math.round(mehl * 0.025);
+        
+        const gesamtGewicht = mehl + wasser + lm + salz + oel;
+        const stueck = Math.round(gesamtGewicht / 140);
+
+        resTitle.innerText = "🥖 Brötchen-Rezept";
+        resList.innerHTML = `
+            <li><b>Weizenmehl (Type 550):</b> ${mehl} g</li>
+            <li><b>Wasser (handwarm):</b> ${wasser} ml</li>
+            <li><b>Lievito Madre:</b> ${lm} g</li>
+            <li><b>Salz:</b> ${salz} g</li>
+            <li><b>Öl oder weiche Butter:</b> ${oel} g</li>
+            <li><i>Ergibt ca. <b>${stueck} Brötchen</b></i></li>
+        `;
+
+        stepsHTML = `
+            <li><b>Kneten:</b> Alle Zutaten gründlich für ca. 10–12 Minuten zu einem glatten Teig verarbeiten.</li>
+            <li><b>Stockgare:</b> Abgedeckt für 2,5 bis 3 Stunden bei Zimmertemperatur anspringen lassen.</li>
+            <li><b>Abstechen:</b> Teig vorsichtig auf die bemehlte Arbeitsfläche kippen (nicht kneten!) und in ca. ${stueck} Stücke teilen. Leicht rundschleifen.</li>
+            <li><b>Stückgare:</b> Auf einem mit Backpapier belegten Blech abgedeckt 1,5 Stunden ruhen lassen.</li>
+            <li><b>Backen:</b> Bei 220 °C Ober-/Unterhitze mit Dampf (Schwaden) ca. 18–22 Minuten goldbraun ausbacken.</li>
+        `;
+    }
+    else if (recipe === "hefezopf") {
+        mehl = Math.round(lm * 3.0);
+        milch = Math.round(mehl * 0.40);
+        zucker = Math.round(mehl * 0.18);
+        butter = Math.round(mehl * 0.18);
+        salz = Math.round(mehl * 0.015);
+        eigelb = Math.max(1, Math.round(mehl / 225));
+
+        resTitle.innerText = "🥐 Süßer Hefezopf";
+        resList.innerHTML = `
+            <li><b>Weizenmehl:</b> ${mehl} g</li>
+            <li><b>Milch (lauwarm):</b> ${milch} ml</li>
+            <li><b>Lievito Madre:</b> ${lm} g</li>
+            <li><b>Zucker:</b> ${zucker} g</li>
+            <li><b>Weiche Butter:</b> ${butter} g</li>
+            <li><b>Eigelb:</b> ${eigelb} Stück</li>
+            <li><b>Salz:</b> ${salz} g (1 Prise)</li>
+        `;
+
+        stepsHTML = `
+            <li><b>Mischen:</b> Milch, Zucker, Eigelb und LM verrühren. Mehl & Salz dazugeben und 5 Min. kneten.</li>
+            <li><b>Butter einarbeiten:</b> Weiche Butterwürfel nach und nach unterkneten, bis ein seidiger Teig entsteht (ca. 10 Min.).</li>
+            <li><b>Stockgare:</b> Abgedeckt 3–4 Stunden bei Wärme anspringen lassen, danach über Nacht (12–16h) in den Kühlschrank.</li>
+            <li><b>Formen:</b> Kalt in 3 Stränge teilen, flechten und auf einem Blech abgedeckt ca. 3–5 Stunden warm reifen lassen, bis er prall ist.</li>
+            <li><b>Backen:</b> Mit Eigelb/Milch bestreichen und bei 180 °C Ober-/Unterhitze ca. 25–30 Minuten goldbraun backen.</li>
+        `;
+    }
+
+    resSteps.innerHTML = stepsHTML;
+    output.style.display = 'block';
+}
+
+// Service Worker Registrierung für PWA
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker aktiviert!'))
+        .catch(err => console.log('Service Worker Fehler:', err));
+}
+</script>
+
+</body>
+</html>
