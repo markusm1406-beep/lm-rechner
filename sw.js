@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lm-rechner-v2';
+const CACHE_NAME = 'lm-rechner-v3';
 const ASSETS = [
   'index.html',
   'manifest.json'
