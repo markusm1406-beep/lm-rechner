@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lievito Madre Rechner</title>
-    <!-- Icon für PC-Browser & Windows-Verknüpfung -->
-<link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
+    
+    <!-- Lokale App-Icons für Browser, PC-Verknüpfung & iPhone -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    
     <!-- PWA Einstellungen -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#d35400">
@@ -15,18 +17,78 @@
     <meta name="apple-mobile-web-app-title" content="LM Rechner">
 
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; padding: 20px; color: #333; }
-        .card { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #d35400; margin-top: 0; }
-        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; background-color: #e67e22; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; margin-top: 20px; cursor: pointer; }
-        button:hover { background-color: #d35400; }
-        .result { margin-top: 20px; padding: 15px; background: #fff8f0; border-left: 5px solid #e67e22; border-radius: 4px; }
-        ul, ol { padding-left: 20px; }
-        li { margin-bottom: 8px; font-size: 15px; line-height: 1.4; }
-        .instructions { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0; }
-        .instructions h4 { margin-bottom: 8px; color: #d35400; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f4f4f9; 
+            padding: 20px; 
+            color: #333; 
+        }
+        .card { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        h2 { 
+            text-align: center; 
+            color: #d35400; 
+            margin-top: 0; 
+        }
+        label { 
+            font-weight: bold; 
+            display: block; 
+            margin-top: 15px; 
+            margin-bottom: 5px; 
+        }
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+        }
+        button { 
+            width: 100%; 
+            background-color: #e67e22; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            border-radius: 6px; 
+            margin-top: 20px; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background-color: #d35400; 
+        }
+        .result { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #fff8f0; 
+            border-left: 5px solid #e67e22; 
+            border-radius: 4px; 
+        }
+        ul, ol { 
+            padding-left: 20px; 
+        }
+        li { 
+            margin-bottom: 8px; 
+            font-size: 15px; 
+            line-height: 1.4; 
+        }
+        .instructions { 
+            margin-top: 15px; 
+            padding-top: 15px; 
+            border-top: 1px solid #e0e0e0; 
+        }
+        .instructions h4 { 
+            margin-bottom: 8px; 
+            color: #d35400; 
+        }
     </style>
 </head>
 <body>
@@ -186,10 +248,10 @@ function calculateRecipe() {
     output.style.display = 'block';
 }
 
-// Service Worker Registrierung für PWA
+// Service Worker Registrierung
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker aktiviert!'))
+        .then(() => console.log('Service Worker geladen'))
         .catch(err => console.log('Service Worker Fehler:', err));
 }
 </script>
